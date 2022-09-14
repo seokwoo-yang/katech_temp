@@ -27,7 +27,7 @@ def main():
     try:
         target = args.target_file_directory
         lines = args.rows
-        rows = {"body": head(pathlib.Path(config.env["filebrowser"]["root"]) / target, int(lines))}
+        rows = {"body": head(pathlib.Path(config.env[config.FB_ENV]["filebrowser"]["root"]) / target, int(lines))}
 
         print(rows)
     except Exception as e:

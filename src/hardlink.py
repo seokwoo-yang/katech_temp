@@ -20,11 +20,10 @@ def get_bool(val):
 
 
 def main():
-    print(os.path.abspath(__file__))
     logging.config.dictConfig(config.logging_config(f"{pathlib.Path(__file__).stem}.log"))
 
     parser = argparse.ArgumentParser(description="마이디스크 저장(관심데이터or찜데이터)")
-    parser.add_argument("--target_path", required=True, help="복사 대상(파일 또는 디렉터리)")
+    parser.add_argument("--src_path", required=True, help="복사 대상(파일 또는 디렉터리)")
     parser.add_argument(
         "--force",
         default=False,
@@ -32,23 +31,25 @@ def main():
         type=get_bool,
         help="중복시 덮어쓸지, 넘어갈지(yes|no, true|false, t|f, y|n, 1|0)",
     )
+    parser.add_argument("--dst_path", required=True, help="복사할 위치 기본 dir(계정명 or 계정/찜dir or dataset?)")
     args = parser.parse_args()
 
     try:
         exist_ok = args.force
-        target_path = args.target_path
-
-        base_dir = "./test"
-        dst_path = os.path.join(base_dir, os.path.basename(target_path))
+        src_path = args.src_path
+        dst_path = os.path.join(
+            config.env[config.FB_ENV]["filebrowser"]["root"], args.dst_path, os.path.basename(src_path)
+        )
 
         print(exist_ok)
         if os.path.exists(dst_path) and exist_ok:
-            shutil.rmtree(dst_path)
+            # shutil.rmtree(dst_path)
+            pass
         elif not exist_ok:
             return
 
         shutil.copytree(
-            src=target_path,
+            src=src_path,
             dst=dst_path,
             dirs_exist_ok=exist_ok,
             copy_function=os.link,

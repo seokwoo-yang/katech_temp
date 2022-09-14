@@ -34,7 +34,7 @@ def main():
 
     try:
         target = args.target_directory
-        tree = {"body": walk(pathlib.Path(config.env["filebrowser"]["root"]) / target)}
+        tree = {"body": walk(pathlib.Path(config.env[config.FB_ENV]["filebrowser"]["root"]) / target)}
 
         print(tree)
     except Exception as e:
