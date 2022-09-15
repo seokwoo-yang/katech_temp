@@ -23,7 +23,7 @@ def create_user(username, scope, password):
         int: 응답 상태코드
     """
 
-    base_url = "http://192.168.101.44:8080/api"
+    base_url = f"{config.env[config.FB_ENV]['filebrowser']['url']}/api"
     token = get_token(base_url)
     status = post_create_user(base_url, username, scope, password, token)
 
@@ -95,7 +95,6 @@ def post_create_user(base_url, username, scope, password, token):
     headers = {"X-Auth": token}
 
     response = requests.post(url, data=json.dumps(data), headers=headers)
-    print(response.headers)
 
     return response.status_code
 
@@ -103,16 +102,16 @@ def post_create_user(base_url, username, scope, password, token):
 def main():
     logging.config.dictConfig(config.logging_config(f"{pathlib.Path(__file__).stem}.log"))
 
-    parser = argparse.ArgumentParser(description="파일 미리보기")
+    parser = argparse.ArgumentParser(description="파일브라우저 계정 생성")
     parser.add_argument("--username", required=True, help="생성할 사용자명")
-    parser.add_argument("--scope", required=True, help="사용자 홈 디렉토리 경로")
     parser.add_argument("--password", required=True, help="사용자 패스워드")
+    parser.add_argument("--scope", required=False, default=None, help="사용자 홈 디렉토리 경로(default: /계정명)")
     args = parser.parse_args()
 
     try:
         username = args.username
-        scope = args.scope
         password = args.password
+        scope = "/" + username if args.scope in (".", "/", None) else args.scope
         rows = {"body": create_user(username, scope, password)}
 
         print(rows)

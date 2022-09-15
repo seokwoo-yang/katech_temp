@@ -35,23 +35,22 @@ def main():
     args = parser.parse_args()
 
     try:
-        exist_ok = args.force
+        is_force = args.force
         src_path = args.src_path
         dst_path = os.path.join(
             config.env[config.FB_ENV]["filebrowser"]["root"], args.dst_path, os.path.basename(src_path)
         )
 
-        print(exist_ok)
-        if os.path.exists(dst_path) and exist_ok:
-            # shutil.rmtree(dst_path)
-            pass
-        elif not exist_ok:
-            return
+        if os.path.exists(dst_path):
+            if is_force:
+                shutil.rmtree(dst_path)
+            else:
+                raise Exception("already exist")
 
         shutil.copytree(
             src=src_path,
             dst=dst_path,
-            dirs_exist_ok=exist_ok,
+            dirs_exist_ok=is_force,
             copy_function=os.link,
         )
 
