@@ -1,13 +1,14 @@
-from dataclasses import dataclass
 import requests
-
 import logging.config
 import logging
 import pathlib
 import argparse
 import json
 
-import config
+from common.config import get_config
+
+
+CONFIG = get_config()
 
 
 def create_user(username, scope, password):
@@ -23,7 +24,7 @@ def create_user(username, scope, password):
         int: 응답 상태코드
     """
 
-    base_url = f"{config.env[config.FB_ENV]['filebrowser']['url']}/api"
+    base_url = f"{CONFIG.FILEBROWSER.CONN_URL}/api"
     token = get_token(base_url)
     status = post_create_user(base_url, username, scope, password, token)
 
@@ -93,15 +94,12 @@ def post_create_user(base_url, username, scope, password, token):
     }
 
     headers = {"X-Auth": token}
-
     response = requests.post(url, data=json.dumps(data), headers=headers)
 
     return response.status_code
 
 
 def main():
-    logging.config.dictConfig(config.logging_config(f"{pathlib.Path(__file__).stem}.log"))
-
     parser = argparse.ArgumentParser(description="파일브라우저 계정 생성")
     parser.add_argument("--username", required=True, help="생성할 사용자명")
     parser.add_argument("--password", required=True, help="사용자 패스워드")
@@ -115,8 +113,9 @@ def main():
         rows = {"body": create_user(username, scope, password)}
 
         print(rows)
+        # logging.info(rows)
     except Exception as e:
-        logging.exception(e, exc_info=True)
+        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 
