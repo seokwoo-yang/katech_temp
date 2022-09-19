@@ -4,11 +4,12 @@ import logging
 import pathlib
 import sys
 
-import config
+from common.config import get_config
+
+CONFIG = get_config()
 
 
 def walk(path):
-    logging.info(f"walk {path}")
     id = 0
 
     def nodes(p):
@@ -26,20 +27,19 @@ def walk(path):
 
 
 def main():
-    logging.config.dictConfig(config.logging_config(f"{pathlib.Path(__file__).stem}.log"))
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--target_directory", required=True, help="루트 디렉토리명")
     args = parser.parse_args()
 
     try:
         target = args.target_directory
-        tree = {"body": walk(pathlib.Path(config.env[config.FB_ENV]["filebrowser"]["root"]) / target)}
+        tree = {"body": walk(pathlib.Path(CONFIG.FILEBROWSER.ROOT_DIR) / target)}
 
         print(tree)
+        # log.info(tree)
     except Exception as e:
-        logging.exception(e)
-        print({"body": []})
+        # log.exception(e, exc_info=True)
+        print({"body": [], "message": f"fail :: {str(e)}"})
 
 
 if __name__ == "__main__":

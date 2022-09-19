@@ -4,3 +4,5 @@ log
 test
 __pycache__
 *.csv
+tests
+.DS_Store

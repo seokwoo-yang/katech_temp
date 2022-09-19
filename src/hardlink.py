@@ -1,11 +1,14 @@
 import logging
 import logging.config
 import os
-import config
 import pathlib
 import argparse
 import json
 import shutil
+
+from common.config import get_config
+
+CONFIG = get_config()
 
 
 def get_bool(val):
@@ -20,8 +23,6 @@ def get_bool(val):
 
 
 def main():
-    logging.config.dictConfig(config.logging_config(f"{pathlib.Path(__file__).stem}.log"))
-
     parser = argparse.ArgumentParser(description="마이디스크 저장(관심데이터or찜데이터)")
     parser.add_argument("--src_path", required=True, help="복사 대상(파일 또는 디렉터리)")
     parser.add_argument(
@@ -37,9 +38,7 @@ def main():
     try:
         is_force = args.force
         src_path = args.src_path
-        dst_path = os.path.join(
-            config.env[config.FB_ENV]["filebrowser"]["root"], args.dst_path, os.path.basename(src_path)
-        )
+        dst_path = os.path.join(CONFIG.FILEBROWSER.ROOT_DIR, args.dst_path, os.path.basename(src_path))
 
         if os.path.exists(dst_path):
             if is_force:
@@ -55,8 +54,9 @@ def main():
         )
 
         print({"body": dst_path})
+        # logging.info(dst_path)
     except Exception as e:
-        logging.exception(e, exc_info=True)
+        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 

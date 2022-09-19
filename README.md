@@ -1,5 +1,5 @@
-KATECH
+# KATECH - Filebrowser
 
-# 개발서버 default=dev
-# 테스트(local)=test
-export FB_ENV=dev
+export APP_ENV=[local | test | prod]
+python python_file --help
+
