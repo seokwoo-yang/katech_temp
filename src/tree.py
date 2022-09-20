@@ -1,6 +1,8 @@
 import argparse
 import logging.config
 import logging
+import os
+import stat
 import pathlib
 import sys
 
@@ -17,10 +19,13 @@ def walk(path):
         lst = []
         for i in p.iterdir():
             id += 1
+            data = {"text": i.name, "id": id}
             if i.is_dir():
-                lst.append({"text": i.name, "id": id, "nodes": nodes(i)})
-            else:
-                lst.append({"text": i.name, "id": id})
+                node = nodes(i)
+                if node:
+                    data["nodes"] = node
+
+            lst.append(data)
         return lst
 
     return nodes(path)
@@ -36,7 +41,7 @@ def main():
         tree = {"body": walk(pathlib.Path(CONFIG.FILEBROWSER.ROOT_DIR) / target)}
 
         print(tree)
-        # log.info(tree)
+        CONFIG.LOG.debug(tree)
     except Exception as e:
         # log.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
