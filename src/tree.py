@@ -32,7 +32,6 @@ def main():
     args = parser.parse_args()
 
     try:
-        print(CONFIG.BASE_DIR)
         target = args.target_directory
         tree = {"body": walk(pathlib.Path(CONFIG.FILEBROWSER.ROOT_DIR) / target)}
 
