@@ -10,7 +10,7 @@ class LogFactory:
     _log_ = None
 
     @staticmethod
-    def get_file_logger(path=None, program=None):
+    def get_file_logger(path=None, program=None, level=logging.DEBUG):
         def __getLogFile(log_path, program):
             if not log_path:
                 rpath = os.path.dirname(sys.argv[0])
@@ -23,7 +23,7 @@ class LogFactory:
             error_log_file = os.path.join(log_path, f"{program}_ERROR.log")
             return log_file, error_log_file
 
-        def __init(path, program):
+        def __init(path, program, level):
             LogFactory._log_ = logging.getLogger()
 
             log_file, error_log_file = __getLogFile(path, program)
@@ -32,7 +32,7 @@ class LogFactory:
 
             handler = logging.handlers.RotatingFileHandler(log_file, "a", 10 * 1024 * 1024, 9)
             handler.setFormatter(formatter)
-            handler.setLevel(logging.DEBUG)
+            handler.setLevel(level)
             LogFactory._log_.addHandler(handler)
 
             error_handler = logging.handlers.RotatingFileHandler(error_log_file, "a", 10 * 1024 * 1024, 9)
@@ -40,17 +40,22 @@ class LogFactory:
             error_handler.setLevel(logging.ERROR)
             LogFactory._log_.addHandler(error_handler)
 
-            LogFactory._log_.setLevel(logging.DEBUG)
+            LogFactory._log_.setLevel(level)
 
         if not LogFactory._log_:
-            __init(path, program)
+            __init(path, program, level)
         return LogFactory._log_
 
     @staticmethod
     def get_stream_logger():
+        LogFactory._log_ = logging.getLogger()
+
         formatter = logging.Formatter(LogFactory.formatStr)
         handler = logging.StreamHandler()
         handler.setFormatter(formatter)
+
+        LogFactory._log_.addHandler(handler)
+        LogFactory._log_.setLevel(logging.DEBUG)
 
         return LogFactory._log_
 
