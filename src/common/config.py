@@ -1,4 +1,4 @@
-from dataclasses import dataclass, Field
+from dataclasses import dataclass
 from functools import lru_cache
 from logging import Logger
 import os
@@ -21,7 +21,7 @@ class Config:
     Local: stream
     test: 통합파일 ? prod: error, debug, info 등 분리
     """
-    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     FILEBROWSER: Filebrowser = None
 
 
@@ -50,7 +50,7 @@ class ProdConfig(Config):
     ...
 
 
-@lru_cache
+# @lru_cache
 def get_config():
     config = dict(prod=ProdConfig, local=LocalConfig, test=TestConfig)
     return config[os.getenv("APP_ENV", "test")]()
