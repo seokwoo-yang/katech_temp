@@ -1,10 +1,5 @@
 import argparse
-import logging.config
-import logging
-import os
-import stat
 import pathlib
-import sys
 
 from common.config import get_config
 
@@ -37,13 +32,12 @@ def main():
     args = parser.parse_args()
 
     try:
+        print(CONFIG.BASE_DIR)
         target = args.target_directory
         tree = {"body": walk(pathlib.Path(CONFIG.FILEBROWSER.ROOT_DIR) / target)}
 
         print(tree)
-        CONFIG.LOG.debug(tree)
     except Exception as e:
-        # log.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 

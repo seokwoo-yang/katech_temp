@@ -1,7 +1,4 @@
 import requests
-import logging.config
-import logging
-import pathlib
 import argparse
 import json
 
