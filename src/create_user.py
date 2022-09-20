@@ -110,9 +110,7 @@ def main():
         rows = {"body": create_user(username, scope, password)}
 
         print(rows)
-        # logging.info(rows)
     except Exception as e:
-        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 
