@@ -1,5 +1,7 @@
-import logging
 import requests
+import logging.config
+import logging
+import pathlib
 import argparse
 import json
 
@@ -105,15 +107,15 @@ def main():
     args = parser.parse_args()
 
     try:
-        logging.getLogger("urllib3").setLevel(logging.CRITICAL)
-
         username = args.username
         password = args.password
         scope = "/" + username if args.scope in (".", "/", None) else args.scope
         rows = {"body": create_user(username, scope, password)}
 
         print(rows)
+        # logging.info(rows)
     except Exception as e:
+        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 

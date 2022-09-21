@@ -1,4 +1,7 @@
+import logging.config
+import logging
 import pathlib
+import sys
 import argparse
 
 import pandas as pd
@@ -25,9 +28,15 @@ def main():
         rows = {"body": head(pathlib.Path(CONFIG.FILEBROWSER.ROOT_DIR) / target, int(lines))}
 
         print(rows)
+        # logging.info(rows)
     except Exception as e:
+        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 
 if __name__ == "__main__":
     main()
+
+    # import json
+    # rows = head(pathlib.Path("head.csv"), 5)
+    # print(json.dumps(rows, indent=2))
