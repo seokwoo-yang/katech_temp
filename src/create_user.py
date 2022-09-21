@@ -1,3 +1,4 @@
+import logging
 import requests
 import argparse
 import json
@@ -104,6 +105,8 @@ def main():
     args = parser.parse_args()
 
     try:
+        logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+
         username = args.username
         password = args.password
         scope = "/" + username if args.scope in (".", "/", None) else args.scope
