@@ -1,5 +1,9 @@
+import logging
+import logging.config
 import os
+import pathlib
 import argparse
+import json
 import shutil
 
 from common.config import get_config
@@ -50,7 +54,9 @@ def main():
         )
 
         print({"body": dst_path})
+        # logging.info(dst_path)
     except Exception as e:
+        # logging.exception(e, exc_info=True)
         print({"body": [], "message": f"fail :: {str(e)}"})
 
 
