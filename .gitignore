@@ -7,3 +7,4 @@ __pycache__
 tests
 .DS_Store
 temp
+*.zip
