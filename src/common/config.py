@@ -4,7 +4,7 @@ from logging import Logger
 import os
 import logging
 
-from common.logger import LogFactory
+from .logger import LogFactory
 
 
 @dataclass

@@ -10,6 +10,7 @@ CONFIG = get_config()
 
 def head(path, lines):
     df = pd.read_excel(path, header=None) if path.suffix in ["xls", "xlsx"] else pd.read_csv(path, header=None)
+    df = df.fillna("")
     return df[:lines].values.tolist()
 
 
