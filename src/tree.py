@@ -3,6 +3,7 @@ import pathlib
 
 from common.config import get_config
 
+
 CONFIG = get_config()
 
 

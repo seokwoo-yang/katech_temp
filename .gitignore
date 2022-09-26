@@ -8,3 +8,5 @@ tests
 .DS_Store
 temp
 *.zip
+.coverage
+.pytest_cache

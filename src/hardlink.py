@@ -1,5 +1,6 @@
 import os
 import argparse
+import pathlib
 import shutil
 
 from common.config import get_config
@@ -18,6 +19,24 @@ def get_bool(val):
         raise argparse.ArgumentTypeError("must bool")
 
 
+def hardlink(src_path, dst_path, is_force):
+    if os.path.exists(dst_path):
+        if is_force:
+            shutil.rmtree(dst_path)
+        else:
+            raise Exception("already exist")
+
+    if os.path.isfile(src_path):
+        os.link(src_path, dst_path)
+    else:
+        shutil.copytree(
+            src=src_path,
+            dst=dst_path,
+            dirs_exist_ok=is_force,
+            copy_function=os.link,
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(description="마이디스크 저장(관심데이터or찜데이터)")
     parser.add_argument("--src_path", required=True, help="복사 대상(파일 또는 디렉터리)")
@@ -34,20 +53,13 @@ def main():
     try:
         is_force = args.force
         src_path = args.src_path
-        dst_path = os.path.join(CONFIG.FILEBROWSER.ROOT_DIR, args.dst_path, os.path.basename(src_path))
+        base_dst = os.path.join(CONFIG.FILEBROWSER.ROOT_DIR, args.dst_path)
+        if pathlib.Path(base_dst).is_file():
+            dst_path = os.path.join(base_dst, os.path.basename(src_path))
+        else:
+            dst_path = base_dst
 
-        if os.path.exists(dst_path):
-            if is_force:
-                shutil.rmtree(dst_path)
-            else:
-                raise Exception("already exist")
-
-        shutil.copytree(
-            src=src_path,
-            dst=dst_path,
-            dirs_exist_ok=is_force,
-            copy_function=os.link,
-        )
+        hardlink(src_path, dst_path, is_force)
 
         print({"body": dst_path})
     except Exception as e:

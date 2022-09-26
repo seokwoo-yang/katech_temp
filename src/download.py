@@ -23,7 +23,7 @@ def get_args():
         "--type",
         required=False,
         default="zip",
-        help="zip,tar,tar.gz,tar.bz2,tar.xz,tar.lz4,tar.sz",
+        help="default=zip,tar,tar.gz,tar.bz2,tar.xz,tar.lz4,tar.sz",
     )
 
     return parser.parse_args()
@@ -47,6 +47,8 @@ def write_to(content, download_path, type):
 
     os.chmod(path, 755)
 
+    return path
+
 
 def main():
     logging.getLogger("urllib3").setLevel(logging.CRITICAL)
@@ -64,8 +66,9 @@ def main():
             response = download_multiple(base_url, token, src_path, type)
         else:
             response = download_one(base_url, token, src_path, type, is_dir(src_path))
+        path = write_to(response.content, download_path, type)
 
-        write_to(response.content, download_path, type)
+        print({"body": path})
     except Exception as e:
         print({"body": [], "message": f"fail :: {str(e)}"})
 
