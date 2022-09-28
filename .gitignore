@@ -4,9 +4,9 @@ log
 test
 __pycache__
 *.csv
-tests
 .DS_Store
 temp
+check
 *.zip
 .coverage
 .pytest_cache

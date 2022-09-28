@@ -69,6 +69,8 @@ def main():
         path = write_to(response.content, download_path, type)
 
         print({"body": path})
+        # TODO: 테스트후 삭제(기능확인용)
+        return {"status_code": response.status_code, "result": {"body": path}}
     except Exception as e:
         print({"body": [], "message": f"fail :: {str(e)}"})
 
